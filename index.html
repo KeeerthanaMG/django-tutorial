@@ -1129,6 +1129,497 @@ def tasks_api(request):
             </div>
         </section>
 
+        <!-- Inter/Adv Section -->
+        <section id="hackathon-challenges" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-red-500 rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Advanced: Real Hackathon Pitfalls</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8 font-medium">For intermediate developers, "vibecoding" fast isn't enough.
+                    Here are the critical blockers you’ll typically fail at during a 24-hour hackathon and how to
+                    quickly resolve them using Django.</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Pitfall 1: CORS -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-red-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center text-red-400 font-bold shrink-0">
+                                <i class="fas fa-biohazard"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">1. The CORS Nightmare</h3>
+                                <p class="text-sm text-slate-400 mt-1">Your React/Next.js frontend (port 3000) tries to
+                                    talk to Django (port 8000). The browser blocks it with a red "CORS Blocked" error in
+                                    the console right before your demo.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">Use <code>django-cors-headers</code>. For a 24-hour
+                                sprint, set <code>CORS_ALLOW_ALL_ORIGINS = True</code> in <code>settings.py</code>.
+                                Don't waste early hours configuring specific domain whitelists until you hit production.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Pitfall 2: API Timeouts -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-orange-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-400 font-bold shrink-0">
+                                <i class="fas fa-hourglass-end"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">2. Serverless LLM Timeouts</h3>
+                                <p class="text-sm text-slate-400 mt-1">You integrate OpenAI or Anthropic. The prompt
+                                    generation takes 45 seconds. Platforms like Vercel or Render kill the request after
+                                    30 seconds, returning a <code>504 Gateway Timeout</code>.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">Never put heavy LLM generation directly in a standard
+                                Django view on free tiers. Fast track: use Django's <code>StreamingHttpResponse</code>.
+                                Proper track: use <code>django-q2</code> or <code>Celery</code> for background task
+                                queues.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pitfall 3: CSRF & Auth -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-yellow-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center text-yellow-400 font-bold shrink-0">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">3. CSRF & OAuth Speedrunning</h3>
+                                <p class="text-sm text-slate-400 mt-1">Django kicks POST requests out with a <code
+                                        class="text-red-400">403 Forbidden</code> because of missing CSRF tokens. Or
+                                    worse, you spend 6 hours trying to build "Login with Google" from scratch.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">Bypass CSRF carefully with <code>@csrf_exempt</code>
+                                for rapid prototyping. For authentication, never build JWT or Social Login from
+                                scratch—use <code>dj-rest-auth</code> alongside <code>django-allauth</code>. It handles
+                                Google/GitHub OAuth out-of-the-box.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pitfall 4: Ephemeral Storage -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-cyan-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 font-bold shrink-0">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">4. Disappearing Uploads (Ephemeral FS)</h3>
+                                <p class="text-sm text-slate-400 mt-1">Users upload profile pictures successfully. You
+                                    push a new commit to Render/Railway. Suddenly, all previously uploaded images are
+                                    completely gone.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">Cloud hosting platforms use "ephemeral storage"
+                                meaning local files are wiped on restart. You <strong>must</strong> use an external blob
+                                storage. Use <code>django-storages</code> and connect it to a free AWS S3 bucket or
+                                Cloudinary.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pitfall 5: Database Lock (SQLite) -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-blue-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold shrink-0">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">5. The "Database is Locked" Crash</h3>
+                                <p class="text-sm text-slate-400 mt-1">During the final pitch, 5 judges load your app
+                                    simultaneously. Async Python scrapers collide with them. You hit a <code
+                                        class="text-red-400">database is locked</code> error on SQLite.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">Ditch SQLite 2 hours before the deadline. Transition
+                                to a free remote PostgreSQL database (like Supabase, Neon, or Railway) easily using the
+                                <code>dj-database-url</code> snippet in your settings.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Pitfall 6: Unblocking Frontends -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-purple-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 font-bold shrink-0">
+                                <i class="fas fa-code-branch"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">6. The "Vibecoder's Blindspot"</h3>
+                                <p class="text-sm text-slate-400 mt-1">You code the backend incredibly fast, but your
+                                    frontend team is sitting idle waiting to know what the exact JSON structure of the
+                                    API looks like before they can build the UI.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">
+                                <strong>1. Auto-Docs:</strong> Plug in <code>drf-spectacular</code> for instant visual
+                                Swagger documentation.<br>
+                                <strong>2. Seed Data:</strong> Don't wait on complex logic. Write a 10-line script using
+                                Python's <code>Faker</code> to dump 50 highly realistic mock objects into the DB
+                                immediately.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Pitfall 7: Rate Limiting -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-pink-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400 font-bold shrink-0">
+                                <i class="fas fa-hand-paper"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">7. Missing Rate Limits</h3>
+                                <p class="text-sm text-slate-400 mt-1">Judges are testing your app and spam click a
+                                    generation button. Your third-party API keys (OpenAI, Stripe) rapidly expire or bill
+                                    you $50 during the hackathon.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">Implement <code>django-ratelimit</code> on expensive
+                                endpoints to cap requests at '5/m' (5 per minute) per IP. This shows judges you think
+                                about scalable production architecture.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pitfall 8: Ugly Errors -->
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl group hover:border-teal-500/30 transition-colors flex flex-col">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div
+                                class="w-10 h-10 rounded-full bg-teal-500/10 flex items-center justify-center text-teal-400 font-bold shrink-0">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white">8. "Internal Server Error" Crash</h3>
+                                <p class="text-sm text-slate-400 mt-1">A variable comes in null. Instead of returning a
+                                    helpful JSON error, Django returns a massive HTML dump of the 500 error page to your
+                                    frontend, completely destroying your app's state.</p>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900 rounded-lg p-4 border border-slate-700 mt-auto">
+                            <strong class="text-emerald-400 text-sm"><i class="fas fa-check-circle"></i> Hackathon
+                                Fix:</strong>
+                            <p class="text-slate-300 text-sm mt-2">Always use DRF's built-in exception handlers or write
+                                a simple custom middleware that catches any 500 exceptions and returns a structured
+                                <code>{"error": "string"}</code> JSON object for the frontend to gracefully display.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Boilerplate Setup Section -->
+        <section id="boilerplate" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-purple-500 rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">The Pre-Hackathon Checklist</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8 font-medium">Don't create your project when the timer starts. Use a
+                    robust, pre-configured boilerplate. Here is what you should have set up in your starter template
+                    <em>before</em> the hackathon begins:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Standard Django Structure vs Hackathon Standard -->
+                    <div class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl">
+                        <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i
+                                class="fas fa-folder-tree text-purple-400 mr-2"></i> Production Folder Structure</h3>
+                        <div class="font-mono text-xs text-slate-300 space-y-2">
+                            <div><i class="fas fa-folder text-purple-400"></i> project_root/</div>
+                            <div class="ml-4"><i class="fas fa-folder text-blue-400"></i> my_hackathon_app/ <span
+                                    class="text-slate-500 italic"># Your main settings</span></div>
+                            <div class="ml-8"><i class="fab fa-python text-emerald-400"></i> base.py <span
+                                    class="text-slate-500 italic"># Base config</span></div>
+                            <div class="ml-8"><i class="fab fa-python text-emerald-400"></i> local.py <span
+                                    class="text-slate-500 italic"># Local testing</span></div>
+                            <div class="ml-8"><i class="fab fa-python text-emerald-400"></i> prod.py <span
+                                    class="text-slate-500 italic"># Vercel/Render config</span></div>
+
+                            <div class="ml-4 mt-2"><i class="fas fa-folder text-purple-400"></i> users/ <span
+                                    class="text-slate-500 italic"># Custom User App</span></div>
+                            <div class="ml-8"><i class="fab fa-python text-emerald-400"></i> models.py <span
+                                    class="text-slate-500 italic"># AbstractUser override</span></div>
+
+                            <div class="ml-4 mt-2"><i class="fas fa-folder text-purple-400"></i> api/ <span
+                                    class="text-slate-500 italic"># Centralized API logic</span></div>
+                            <div class="ml-8"><i class="fab fa-python text-emerald-400"></i> urls.py</div>
+                            <div class="ml-8"><i class="fab fa-python text-emerald-400"></i> views.py</div>
+
+                            <div class="ml-4 mt-2"><i class="fas fa-file-alt text-slate-400"></i> .env <span
+                                    class="text-slate-500 italic"># Secret keys</span></div>
+                            <div class="ml-4"><i class="fas fa-file-alt text-slate-400"></i> requirements.txt</div>
+                            <div class="ml-4"><i class="fas fa-file-alt text-slate-400"></i> Dockerfile <span
+                                    class="text-slate-500 italic">(Bonus points!)</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Setup Checklist -->
+                    <div class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl">
+                        <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i
+                                class="fas fa-tasks text-emerald-400 mr-2"></i> Boilerplate To-Dos</h3>
+                        <ul class="space-y-4 text-sm text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i class="far fa-square text-slate-500 mt-1"></i>
+                                <span><strong>Custom User Model:</strong> Always create a custom user extending
+                                    <code>AbstractUser</code> in a 'users' app before your first migration. You will
+                                    likely need extra fields later (e.g. `github_url`, `points`).</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="far fa-square text-slate-500 mt-1"></i>
+                                <span><strong>Environment Variables:</strong> Pre-configure <code>python-dotenv</code>
+                                    or <code>django-environ</code>. Never hardcode API keys or DB passwords.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="far fa-square text-slate-500 mt-1"></i>
+                                <span><strong>RBAC (Role Based Access Setup):</strong> Pre-define 3 basic groups in
+                                    Django Admin (e.g., Admin, Moderator, Basic User). Saves time when you need gated
+                                    features.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="far fa-square text-slate-500 mt-1"></i>
+                                <span><strong>Base Plugins:</strong> Have DRF, CORS-headers, and Django-AllAuth
+                                    pre-installed and mapped in your <code>urls.py</code> ready to go.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="far fa-square text-slate-500 mt-1"></i>
+                                <span><strong>Rock-Solid .gitignore:</strong> Have a pre-made Python
+                                    <code>.gitignore</code>. Ensure <code>.env</code>, <code>__pycache__</code>, and
+                                    <code>db.sqlite3</code> (if not seeding) are ignored to prevent painful merge
+                                    conflicts.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="far fa-square text-slate-500 mt-1"></i>
+                                <span><strong>Seeder Script Engine:</strong> Have a
+                                    <code>management/commands/seed.py</code> template ready to generate mock data. It is
+                                    the fastest way to get your frontend team working.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="far fa-square text-slate-500 mt-1"></i>
+                                <span><strong>Auto-Deploy Pipeline:</strong> Connect your boilerplate repo to
+                                    Render/Vercel/Railway on day zero before writing logic. Debugging "Deployment
+                                    Failed" 5 minutes before submission is a nightmare.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pro Tools Section -->
+        <section id="tools" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-cyan-500 rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Pro Backend Tools</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8 font-medium">Tools that separate standard projects from winning projects.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Tool 1 -->
+                    <a href="https://www.usebruno.com/" target="_blank"
+                        class="block bg-card border border-slate-800 rounded-xl p-5 hover:-translate-y-1 hover:border-cyan-500/50 transition-all group">
+                        <div class="text-cyan-400 text-2xl mb-3"><i class="fas fa-code"></i></div>
+                        <h3 class="font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">Bruno /
+                            Postman</h3>
+                        <p class="text-xs text-slate-400">Postman is great, but <strong>Bruno</strong> is an underrated,
+                            lightweight API client that stores collections as standard text files—extremely easy to
+                            commit to Git and share with your frontend team instantly.</p>
+                    </a>
+
+                    <!-- Tool 2 -->
+                    <a href="https://localstack.cloud/" target="_blank"
+                        class="block bg-card border border-slate-800 rounded-xl p-5 hover:-translate-y-1 hover:border-orange-500/50 transition-all group">
+                        <div class="text-orange-500 text-2xl mb-3"><i class="fab fa-aws"></i></div>
+                        <h3 class="font-bold text-white mb-2 group-hover:text-orange-500 transition-colors">LocalStack
+                        </h3>
+                        <p class="text-xs text-slate-400">Need AWS S3, DynamoDB, or Lambda for your hackathon idea but
+                            don't want to use real cloud credits? <strong>LocalStack</strong> simulates AWS entirely on
+                            your local machine using Docker.</p>
+                    </a>
+
+                    <!-- Tool 3 -->
+                    <a href="https://ngrok.com/" target="_blank"
+                        class="block bg-card border border-slate-800 rounded-xl p-5 hover:-translate-y-1 hover:border-emerald-500/50 transition-all group">
+                        <div class="text-emerald-400 text-2xl mb-3"><i class="fas fa-network-wired"></i></div>
+                        <h3 class="font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">Ngrok /
+                            Localtunnel</h3>
+                        <p class="text-xs text-slate-400">When your frontend teammate needs to test against your backend
+                            API but you haven't deployed to Render yet. Use <strong>ngrok</strong> to instantly expose
+                            your <code>localhost:8000</code> securely to the internet.</p>
+                    </a>
+
+                    <!-- Tool 4 -->
+                    <a href="https://www.eraser.io/" target="_blank"
+                        class="block bg-card border border-slate-800 rounded-xl p-5 hover:-translate-y-1 hover:border-purple-500/50 transition-all group">
+                        <div class="text-purple-400 text-2xl mb-3"><i class="fas fa-project-diagram"></i></div>
+                        <h3 class="font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">Eraser.io /
+                            Excalidraw</h3>
+                        <p class="text-xs text-slate-400">Never start coding the backend without an architecture
+                            diagram. <strong>Eraser.io</strong> or <strong>Excalidraw</strong> allows your team to map
+                            out models, relationships, and API data flow in 10 minutes before touching `models.py`.</p>
+                    </a>
+
+                    <!-- Tool 5 -->
+                    <a href="https://stripe.com/docs/development" target="_blank"
+                        class="block bg-card border border-slate-800 rounded-xl p-5 hover:-translate-y-1 hover:border-indigo-500/50 transition-all group">
+                        <div class="text-indigo-400 text-2xl mb-3"><i class="fab fa-stripe-s"></i></div>
+                        <h3 class="font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">Stripe
+                            Developer Mode</h3>
+                        <p class="text-xs text-slate-400">Hackathon apps that simulate monetization get extra points.
+                            Use <strong>Stripe Test Mode</strong> to integrate real, functioning checkout sessions
+                            without using real credit cards.</p>
+                    </a>
+
+                    <!-- Tool 6 -->
+                    <a href="https://www.docker.com/" target="_blank"
+                        class="block bg-card border border-slate-800 rounded-xl p-5 hover:-translate-y-1 hover:border-blue-500/50 transition-all group">
+                        <div class="text-blue-500 text-2xl mb-3"><i class="fab fa-docker"></i></div>
+                        <h3 class="font-bold text-white mb-2 group-hover:text-blue-500 transition-colors">Docker Desktop
+                        </h3>
+                        <p class="text-xs text-slate-400">"It works on my machine!" - The most common hackathon excuse.
+                            Pre-configuring a <strong>Dockerfile</strong> and <code>docker-compose.yml</code> ensures
+                            everyone on the team has the exact same DB and Django version running instantly.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Security Essentials -->
+        <section id="security" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-red-600 rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Hackathon Security Essentials</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8 font-medium">Judges explicitly look for broken security in backends. You
+                    build fast, but don't commit these cardinal sins.</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Security 1 -->
+                    <div
+                        class="bg-card border-l-4 border-red-500 rounded-r-xl p-5 shadow-lg group hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3 mb-3 text-red-400 font-bold">
+                            <i class="fas fa-key"></i> The .env Trap
+                        </div>
+                        <p class="text-sm text-slate-300">Never hardcode OpenAI, Stripe, or AWS keys in
+                            <code>settings.py</code>, and never push a <code>.env</code> file. Bots aggressively scan
+                            GitHub for exposed keys and will rack up a thousands-of-dollars bill on your personal
+                            account within minutes.
+                        </p>
+                    </div>
+
+                    <!-- Security 2 -->
+                    <div
+                        class="bg-card border-l-4 border-orange-500 rounded-r-xl p-5 shadow-lg group hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3 mb-3 text-orange-400 font-bold">
+                            <i class="fas fa-bug"></i> BOLA (Broken Object Level Auth)
+                        </div>
+                        <p class="text-sm text-slate-300">Never trust the frontend. If your API deletes a post via
+                            <code>DELETE /api/posts/12</code>, do not just delete it. Always verify the backend
+                            <code>request.user</code> actually owns post #12. Many winning projects get mocked when a
+                            judge deletes someone else's data.
+                        </p>
+                    </div>
+
+                    <!-- Security 3 -->
+                    <div
+                        class="bg-card border-l-4 border-yellow-500 rounded-r-xl p-5 shadow-lg group hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3 mb-3 text-yellow-400 font-bold">
+                            <i class="fas fa-exclamation-triangle"></i> The DEBUG = True Disaster
+                        </div>
+                        <p class="text-sm text-slate-300">In production, leaving <code>DEBUG = True</code> gives anyone
+                            who crashes your app full access to tracebacks containing local variables, database
+                            connection strings, and secret keys. Always use an environment variable:
+                            <code>DEBUG = env('DEBUG', False)</code>.
+                        </p>
+                    </div>
+
+                    <!-- Security 4 -->
+                    <div
+                        class="bg-card border-l-4 border-green-500 rounded-r-xl p-5 shadow-lg group hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3 mb-3 text-green-400 font-bold">
+                            <i class="fas fa-database"></i> SQL Injection via Raw Queries
+                        </div>
+                        <p class="text-sm text-slate-300">Django's ORM (<code>Task.objects.filter()</code>) protects you
+                            from SQL injection automatically. If your hackathon project requires complex analytics, be
+                            incredibly careful when using <code>Model.objects.raw()</code>. Never inject f-strings
+                            directly into a SQL query.</p>
+                    </div>
+
+                    <!-- Security 5 -->
+                    <div
+                        class="bg-card border-l-4 border-pink-500 rounded-r-xl p-5 shadow-lg group hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3 mb-3 text-pink-400 font-bold">
+                            <i class="fas fa-user-secret"></i> Mass Assignment (Over-posting)
+                        </div>
+                        <p class="text-sm text-slate-300">If you build a View that updates a User Profile, explicitly
+                            list the fields that are allowed to be updated (e.g.
+                            <code>fields = ['bio', 'location']</code>). If you use <code>fields = '__all__'</code>, a
+                            smart judge can pass {"is_superuser": true} in the JSON payload and hijack your entire
+                            platform.
+                        </p>
+                    </div>
+
+                    <!-- Security 6 -->
+                    <div
+                        class="bg-card border-l-4 border-indigo-500 rounded-r-xl p-5 shadow-lg group hover:bg-slate-800 transition-colors">
+                        <div class="flex items-center gap-3 mb-3 text-indigo-400 font-bold">
+                            <i class="fas fa-stopwatch"></i> Unprotected Auth Endpoints
+                        </div>
+                        <p class="text-sm text-slate-300">Your login endpoint is public to the entire internet. During a
+                            hackathon, an opponent or bot can run a short python script to guess passwords (brute
+                            forcing) 1000 times a second, bringing your server down. You must configure basic Rate
+                            Limiting (e.g., max 10 attempts per minute) specifically on <code>/api/login</code> and
+                            <code>/api/register</code> endpoints using <code>django-ratelimit</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Resources Section -->
         <section id="resources" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
             <div class="max-w-4xl mx-auto" data-aos="fade-up">
@@ -1201,6 +1692,37 @@ def tasks_api(request):
                         </div>
                         <i
                             class="fas fa-download ml-auto text-slate-600 group-hover:text-emerald-400 transition-colors"></i>
+                    </a>
+
+                    <a href="https://docs.djangoproject.com/en/stable/topics/security/" target="_blank"
+                        class="bg-card rounded-xl border border-slate-800 p-4 hover:border-pink-500/50 hover:bg-slate-800 transition-all flex items-center gap-4 group">
+                        <div
+                            class="w-10 h-10 rounded bg-pink-500/10 flex items-center justify-center text-pink-500 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 group-hover:text-white transition-colors">Django
+                                Security
+                            </div>
+                            <div class="text-xs text-slate-500">Official security practices</div>
+                        </div>
+                        <i
+                            class="fas fa-external-link-alt ml-auto text-slate-600 group-hover:text-pink-400 transition-colors"></i>
+                    </a>
+
+                    <a href="https://owasp.org/www-project-top-ten/" target="_blank"
+                        class="bg-card rounded-xl border border-slate-800 p-4 hover:border-orange-500/50 hover:bg-slate-800 transition-all flex items-center gap-4 group">
+                        <div
+                            class="w-10 h-10 rounded bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-spider"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 group-hover:text-white transition-colors">OWASP Top 10
+                            </div>
+                            <div class="text-xs text-slate-500">Security awareness standard</div>
+                        </div>
+                        <i
+                            class="fas fa-external-link-alt ml-auto text-slate-600 group-hover:text-orange-400 transition-colors"></i>
                     </a>
                 </div>
             </div>
