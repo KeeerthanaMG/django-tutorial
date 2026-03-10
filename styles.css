@@ -1,0 +1,138 @@
+/* Custom Styles for Django Session Presentation */
+html, body {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hidden-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+main::-webkit-scrollbar {
+    width: 8px;
+}
+main::-webkit-scrollbar-track {
+    background: #020617; 
+}
+main::-webkit-scrollbar-thumb {
+    background: #1e293b; 
+    border-radius: 4px;
+}
+main::-webkit-scrollbar-thumb:hover {
+    background: #334155; 
+}
+
+/* Code block terminal style */
+pre[class*="language-"] {
+    background-color: #0f172a !important;
+    margin: 0 !important;
+    border-radius: 0 0 0.5rem 0.5rem !important;
+    border: 1px solid #1e293b;
+    border-top: none;
+}
+
+code[class*="language-"] {
+    font-family: 'Fira Code', monospace !important;
+    font-size: 0.875rem !important;
+}
+
+.terminal-header {
+    background: #1e293b;
+    border: 1px solid #1e293b;
+    border-bottom: none;
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.dot-red { background: #ef4444; }
+.dot-yellow { background: #eab308; }
+.dot-green { background: #22c55e; }
+
+/* Custom Animations */
+@keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+    100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-blob {
+    animation: blob 7s infinite ease-in-out;
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+    animation-delay: 4s;
+}
+
+/* Tooltips */
+.tooltip-container {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-container .tooltip {
+    visibility: hidden;
+    background-color: #1e293b;
+    color: #e2e8f0;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    width: max-content;
+    max-width: 250px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    border: 1px solid #334155;
+    font-size: 0.875rem;
+    font-weight: normal;
+}
+
+.tooltip-container .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1e293b transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Mermaid adjustments */
+.mermaid {
+    display: flex;
+    justify-content: center;
+}
+.mermaid svg {
+    max-width: 100% !important;
+    height: auto;
+}

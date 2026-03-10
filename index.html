@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="A hands-on beginner-friendly guide to understanding Django architecture, building APIs, and preparing for hackathons.">
+    <title>Django for Hackathons - From Zero to Backend in One Session</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10b981', // Emerald 500 for Django Green
+                        secondary: '#047857', // Emerald 700
+                        dark: '#020617', // Slate 950
+                        card: '#0f172a', // Slate 900
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Prism Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-twilight.min.css" rel="stylesheet" />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Mermaid -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+
+<body class="bg-dark text-slate-300 font-sans antialiased">
+
+    <!-- Mobile Header -->
+    <div
+        class="md:hidden fixed top-0 w-full bg-slate-900 border-b border-slate-800 z-50 flex justify-between items-center p-4">
+        <div class="text-primary font-bold text-lg flex items-center gap-2">
+            <i class="fab fa-python"></i> Django Workshop
+        </div>
+        <button id="mobile-menu-btn" class="text-slate-300 hover:text-white pb-1 focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-slate-900 border-r border-slate-800 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-40 flex flex-col h-full overflow-y-auto hidden-scrollbar pt-16 md:pt-0 pb-10">
+        <div class="p-6 border-b border-slate-800 hidden md:block">
+            <h1 class="text-primary font-bold text-xl flex items-center gap-2">
+                <i class="fab fa-python"></i> Django Session
+            </h1>
+            <p class="text-xs text-slate-500 mt-2">Zero to Backend</p>
+        </div>
+        <nav id="nav-links" class="flex-1 px-4 py-6 flex flex-col gap-1">
+            <!-- Populated by JS -->
+        </nav>
+        <div class="p-6 border-t border-slate-800">
+            <p class="text-xs text-slate-500 text-center">Built for Hackers 🚀</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="w-full md:pl-64 pt-16 md:pt-0 scroll-smooth">
+
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center justify-center relative px-6 py-20 overflow-hidden">
+            <!-- Animated Background Elements -->
+            <div
+                class="absolute top-20 left-10 w-64 h-64 bg-primary/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob">
+            </div>
+            <div
+                class="absolute top-40 right-10 w-64 h-64 bg-emerald-600/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-2000">
+            </div>
+            <div
+                class="absolute -bottom-8 left-1/2 w-64 h-64 bg-teal-500/10 rounded-full mix-blend-screen filter blur-3xl opacity-30 animate-blob animation-delay-4000">
+            </div>
+
+            <div class="absolute top-1/4 left-1/4 text-primary/20 text-5xl animate-bounce"
+                style="animation-duration: 4s;"><i class="fab fa-python"></i></div>
+            <div class="absolute bottom-1/4 right-1/4 text-primary/20 text-5xl animate-bounce"
+                style="animation-duration: 5s;"><i class="fas fa-database"></i></div>
+            <div class="absolute top-1/3 right-1/3 text-primary/20 text-4xl animate-bounce"
+                style="animation-duration: 6s; opacity: 0.5;">{ }</div>
+
+            <div class="max-w-4xl mx-auto text-center z-10" data-aos="fade-up">
+                <div
+                    class="inline-block px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-medium mb-6">
+                    Technical Workshop Series
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight mb-6">
+                    Django for <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-300">Hackathons</span>
+                </h1>
+                <h2 class="text-2xl md:text-3xl text-slate-300 font-medium mb-6">
+                    Build powerful backends in hours, not weeks.
+                </h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    A hands-on beginner-friendly guide to understanding Django architecture, building APIs, and
+                    preparing for hackathons.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#why-django"
+                        class="px-8 py-3.5 bg-primary hover:bg-emerald-400 text-slate-900 font-bold rounded-lg transition-transform hover:-translate-y-1 shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+                        Start Learning <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#roadmap"
+                        class="px-8 py-3.5 bg-card hover:bg-slate-800 border border-slate-700 text-white font-medium rounded-lg transition-transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                        <i class="fas fa-sitemap"></i> View Mindmap
+                    </a>
+                </div>
+            </div>
+        </section>
+        <!-- About Instructor Section -->
+        <section id="about" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">About the Instructor</h2>
+                </div>
+
+                <div
+                    class="bg-card rounded-2xl p-8 border border-slate-800 shadow-xl hover:shadow-primary/10 transition-shadow duration-300 relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-[100px] border-l border-b border-primary/10 group-hover:bg-primary/10 transition-colors">
+                    </div>
+
+                    <div class="flex flex-col md:flex-row gap-8 items-start relative z-10">
+                        <div
+                            class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-primary/20 flex-shrink-0 bg-slate-800 flex items-center justify-center text-4xl text-primary">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+
+                        <div>
+                            <h3 class="text-2xl font-bold text-white mb-1">Keerthana MG</h3>
+                            <p class="text-primary font-medium mb-4 flex items-center gap-2">
+                                <i class="fas fa-code"></i> Backend Engineer at Happyfox
+                            </p>
+
+                            <p class="text-slate-400 leading-relaxed mb-6">
+                                A developer passionate about building impactful technology solutions. Experienced in
+                                hackathons,
+                                rapid prototyping, and building scalable applications. Interested in backend systems,
+                                AI-powered
+                                applications, and developer communities.
+                            </p>
+
+                            <div class="mb-6 flex flex-wrap gap-2">
+                                <span
+                                    class="px-3 py-1 bg-slate-800 rounded-full text-xs text-slate-300 border border-slate-700">Rapid
+                                    Prototyping</span>
+                                <span
+                                    class="px-3 py-1 bg-slate-800 rounded-full text-xs text-slate-300 border border-slate-700">Community
+                                    Lead</span>
+                                <span
+                                    class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs border border-primary/30">Codesapiens</span>
+                                <span
+                                    class="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-full text-xs border border-purple-500/30">SsheBuilds
+                                    Chennai</span>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <a href="https://www.linkedin.com/in/keerthana-m-g-12ba59256/" target="_blank"
+                                    class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-[#0A66C2] hover:text-white transition-colors">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="https://www.instagram.com/keerthana.codencovers/" target="_blank"
+                                    class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-red-500 hover:to-purple-500 hover:text-white transition-all">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="mailto:keerthanamg19@gmail.com"
+                                    class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 hover:bg-primary hover:text-white transition-colors">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session Mindmap -->
+        <section id="roadmap" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Session Roadmap</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8">Follow this structured path to master Django backend development in one
+                    session.
+                </p>
+
+                <div class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl overflow-x-auto">
+                    <div class="mermaid">
+mindmap
+  root((Django Session))
+    intro(Introduction)
+      why[Why Django]
+      web[Web Architecture]
+    struct(Structure)
+      proj[Project]
+      app[App]
+      mvt[MVT Architecture]
+    core(Core Components)
+      url[URL Routing]
+      views[Views]
+      models[Models and Database]
+    db(Database Magic)
+      mig[Migrations]
+      admin[Django Admin]
+    api(APIs and Launch)
+      build[Building APIs]
+      tips[Hackathon Tips]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Django -->
+        <section id="why-django" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-5xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Why Django for Hackathons</h2>
+                </div>
+
+                <p class="text-lg text-slate-400 mb-12">Building a full stack application is hard. Django gives you the
+                    tools to
+                    move fast without breaking things.</p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-16">
+                    <!-- Without Framework -->
+                    <div
+                        class="bg-card rounded-xl p-8 border border-red-500/30 relative overflow-hidden group hover:border-red-500/50 transition-colors">
+                        <div
+                            class="absolute top-0 right-0 p-3 bg-red-500/20 text-red-400 rounded-bl-lg font-mono text-sm">
+                            Without Framework</div>
+                        <h3 class="text-xl font-bold text-white mb-6">The Hard Way</h3>
+
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-3 text-slate-400">
+                                <i class="fas fa-times-circle text-red-400 w-5"></i> Write Server Code (Express/Flask)
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-400">
+                                <i class="fas fa-times-circle text-red-400 w-5"></i> Build Authentication (JWT/Sessions)
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-400">
+                                <i class="fas fa-times-circle text-red-400 w-5"></i> Setup Database Connection
+                                (Sequelize/SQLAlchemy)
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-400">
+                                <i class="fas fa-times-circle text-red-400 w-5"></i> Handle Security (CORS/CSRF)
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-400">
+                                <i class="fas fa-times-circle text-red-400 w-5"></i> Build Admin Panel manually
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- With Django -->
+                    <div
+                        class="bg-card rounded-xl p-8 border border-primary/50 relative overflow-hidden shadow-[0_0_30px_rgba(16,185,129,0.1)] group hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] transition-shadow">
+                        <div
+                            class="absolute top-0 right-0 p-3 bg-primary/20 text-primary rounded-bl-lg font-mono text-sm">
+                            <i class="fab fa-python"></i> With Django
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-6">The Hackathon Way</h3>
+
+                        <ul class="space-y-4">
+                            <li class="flex items-center gap-3 text-slate-300 font-medium">
+                                <i class="fas fa-check-circle text-primary w-5"></i> Fast development (Batteries
+                                included)
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-300 font-medium">
+                                <i class="fas fa-check-circle text-primary w-5"></i> Built-in User Authentication
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-300 font-medium">
+                                <i class="fas fa-check-circle text-primary w-5"></i> Powerful ORM (Database system)
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-300 font-medium">
+                                <i class="fas fa-check-circle text-primary w-5"></i> Ironclad Security out of the box
+                            </li>
+                            <li
+                                class="flex items-center gap-3 text-slate-300 font-medium bg-primary/10 -mx-2 px-2 py-1 rounded">
+                                <i class="fas fa-star text-yellow-400 w-5"></i> Free Admin Dashboard!
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section><!-- Architecture Diagram -->
+        <section id="architecture" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Django Architecture</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8">How a request flows through Django.</p>
+
+                <div class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl overflow-x-auto mb-10">
+                    <div class="mermaid">
+                        flowchart LR
+                        User((User)) -->|HTTP Request| URL[URL Router]
+                        URL -->|Matches path| View[Django View]
+                        View -->|Query data| Model[Model]
+                        Model -->|SQL| DB[(Database)]
+                        DB -->|Results| Model
+                        Model -->|Data| View
+                        View -->|Context| Template[Template/JSON]
+                        Template -->|HTTP Response| User
+
+                        classDef user fill:#64748b,stroke:#334155,color:#f8fafc;
+                        classDef component fill:#0f172a,stroke:#10b981,color:#f8fafc;
+                        classDef db fill:#020617,stroke:#0f172a,stroke-width:2px,color:#f8fafc;
+
+                        class User user;
+                        class URL,View,Model,Template component;
+                        class DB db;
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation Section -->
+        <section id="installation" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Installing Django</h2>
+                </div>
+
+                <div class="grid gap-6">
+                    <!-- Step 1 -->
+                    <div
+                        class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl group hover:border-slate-700 transition-colors">
+                        <div class="terminal-header">
+                            <div class="terminal-dot dot-red"></div>
+                            <div class="terminal-dot dot-yellow"></div>
+                            <div class="terminal-dot dot-green"></div>
+                            <span class="text-xs text-slate-400 ml-4 font-mono">bash ~ install-django</span>
+                        </div>
+                        <div class="p-4">
+                            <pre><code class="language-bash">pip install django
+django-admin startproject hackathon_project
+cd hackathon_project
+python manage.py runserver</code></pre>
+                            <p class="text-slate-400 text-sm mt-4 p-4 border-l-2 border-primary bg-primary/5 rounded-r">
+                                <strong>Explanation:</strong> This installs Django, creates a new project skeleton
+                                called
+                                <code>hackathon_project</code>, navigates into the folder, and starts the development
+                                server at
+                                <code>http://localhost:8000</code>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Structure -->
+        <section id="project-structure" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Project Structure</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8">What exactly is inside <code>hackathon_project/</code>?</p>
+
+                <div class="bg-card rounded-xl p-6 border border-slate-800 font-mono text-sm">
+                    <ul class="space-y-2 text-slate-300">
+                        <li>
+                            <div
+                                class="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors folder-toggle">
+                                <i class="fas fa-folder-open text-primary w-5 text-center"></i>
+                                <span class="font-bold">hackathon_project/</span>
+                            </div>
+                            <ul class="pl-8 mt-2 space-y-2 border-l border-slate-700 ml-2.5">
+                                <li class="tooltip-container group">
+                                    <div
+                                        class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help">
+                                        <i class="fab fa-python text-blue-400 w-5 text-center"></i> manage.py
+                                    </div>
+                                    <span class="tooltip">Command-line utility (e.g. python manage.py runserver,
+                                        migrate)</span>
+                                </li>
+                                <li>
+                                    <div
+                                        class="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors folder-toggle pt-2">
+                                        <i class="fas fa-folder text-primary w-5 text-center"></i>
+                                        <span class="font-bold">hackathon_project/</span>
+                                    </div>
+                                    <ul class="pl-8 mt-2 space-y-2 border-l border-slate-700 ml-2.5 hidden">
+                                        <li class="tooltip-container group">
+                                            <div
+                                                class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help">
+                                                <i class="fab fa-python text-blue-400 w-5 text-center"></i> __init__.py
+                                            </div>
+                                            <span class="tooltip">Marks directory as a Python package</span>
+                                        </li>
+                                        <li class="tooltip-container group">
+                                            <div
+                                                class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help text-primary/80 group-hover:text-primary">
+                                                <i class="fab fa-python text-blue-400 w-5 text-center"></i> settings.py
+                                            </div>
+                                            <span class="tooltip">Configuration for Django (DB, Apps, Secrets)</span>
+                                        </li>
+                                        <li class="tooltip-container group">
+                                            <div
+                                                class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help text-primary/80 group-hover:text-primary">
+                                                <i class="fab fa-python text-blue-400 w-5 text-center"></i> urls.py
+                                            </div>
+                                            <span class="tooltip">Table of contents for your site. Maps URLs to
+                                                Views.</span>
+                                        </li>
+                                        <li class="tooltip-container group">
+                                            <div
+                                                class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help text-slate-500">
+                                                <i class="fab fa-python text-blue-400 w-5 text-center opacity-50"></i>
+                                                asgi.py
+                                            </div>
+                                            <span class="tooltip">For async deployment (WebSockets, async views)</span>
+                                        </li>
+                                        <li class="tooltip-container group">
+                                            <div
+                                                class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help text-slate-500">
+                                                <i class="fab fa-python text-blue-400 w-5 text-center opacity-50"></i>
+                                                wsgi.py
+                                            </div>
+                                            <span class="tooltip">For standard deployment to production</span>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section><!-- App Structure -->
+        <section id="app-structure" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Creating an App</h2>
+                </div>
+
+                <p class="text-lg text-slate-400 mb-8 border-l-4 border-primary pl-4 py-2 bg-primary/5 rounded-r">
+                    <strong>Concept:</strong> One Django project is divided into multiple features called "apps".
+                    For a Food Delivery Project, you'd have <code>users</code>, <code>orders</code>, and
+                    <code>payments</code>
+                    apps.
+                </p>
+
+                <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl mb-10">
+                    <div class="terminal-header">
+                        <div class="terminal-dot dot-red"></div>
+                        <div class="terminal-dot dot-yellow"></div>
+                        <div class="terminal-dot dot-green"></div>
+                        <span class="text-xs text-slate-400 ml-4 font-mono">Create Task App</span>
+                    </div>
+                    <div class="p-4">
+                        <pre><code class="language-bash">python manage.py startapp tasks</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-xl p-6 border border-slate-800 font-mono text-sm max-w-2xl">
+                    <ul class="space-y-2 text-slate-300">
+                        <li>
+                            <div
+                                class="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors folder-toggle">
+                                <i class="fas fa-folder-open text-primary w-5 text-center"></i>
+                                <span class="font-bold">tasks/</span>
+                            </div>
+                            <ul class="pl-8 mt-2 space-y-2 border-l border-slate-700 ml-2.5">
+                                <li class="tooltip-container group">
+                                    <div
+                                        class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help">
+                                        <i class="fab fa-python text-blue-400 w-5 text-center"></i> admin.py
+                                    </div>
+                                    <span class="tooltip">Register your app to show up in the Django admin panel</span>
+                                </li>
+                                <li class="tooltip-container group">
+                                    <div
+                                        class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help">
+                                        <i class="fab fa-python text-blue-400 w-5 text-center"></i> apps.py
+                                    </div>
+                                    <span class="tooltip">App configuration settings</span>
+                                </li>
+                                <li class="tooltip-container group">
+                                    <div
+                                        class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help text-emerald-400 font-bold group-hover:text-emerald-300">
+                                        <i class="fab fa-python text-blue-400 w-5 text-center"></i> models.py
+                                    </div>
+                                    <span class="tooltip">Define your database tables</span>
+                                </li>
+                                <li class="tooltip-container group">
+                                    <div
+                                        class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help text-emerald-400 font-bold group-hover:text-emerald-300">
+                                        <i class="fab fa-python text-blue-400 w-5 text-center"></i> views.py
+                                    </div>
+                                    <span class="tooltip">Write logic for URLs, querying data, and returning
+                                        responses</span>
+                                </li>
+                                <li class="tooltip-container group">
+                                    <div
+                                        class="flex items-center gap-2 hover:text-white hover:bg-slate-800 p-1 rounded transition-colors w-max pr-4 cursor-help text-slate-500">
+                                        <i class="fab fa-python text-blue-400 w-5 text-center opacity-50"></i> tests.py
+                                    </div>
+                                    <span class="tooltip">Where to put unit tests for this app</span>
+                                </li>
+                                <li>
+                                    <div
+                                        class="flex items-center gap-2 pt-2 hover:text-primary transition-colors cursor-help">
+                                        <i class="fas fa-folder text-primary/70 w-5 text-center"></i> migrations/
+                                    </div>
+                                    <p class="text-xs text-slate-500 ml-8 mt-1 italic">Stores database schema changes
+                                    </p>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- MVT Pattern -->
+        <section id="mvt" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">MVT Architecture</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8">Django uses the Model-View-Template pattern.</p>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-12">
+                    <div
+                        class="bg-card rounded-xl border border-slate-800 p-6 flex flex-col items-center text-center group hover:border-emerald-500/50 transition-colors">
+                        <div
+                            class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center text-2xl text-emerald-400 mb-4 group-hover:bg-emerald-500/10">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Model</h3>
+                        <p class="text-sm text-slate-400">Database structure and schema</p>
+                    </div>
+                    <div
+                        class="bg-card rounded-xl border border-slate-800 p-6 flex flex-col items-center text-center group hover:border-blue-500/50 transition-colors">
+                        <div
+                            class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center text-2xl text-blue-400 mb-4 group-hover:bg-blue-500/10">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">View</h3>
+                        <p class="text-sm text-slate-400">Business logic and data processing</p>
+                    </div>
+                    <div
+                        class="bg-card rounded-xl border border-slate-800 p-6 flex flex-col items-center text-center group hover:border-purple-500/50 transition-colors">
+                        <div
+                            class="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center text-2xl text-purple-400 mb-4 group-hover:bg-purple-500/10">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Template</h3>
+                        <p class="text-sm text-slate-400">HTML rendering (or JSON for APIs)</p>
+                    </div>
+                </div>
+
+                <div class="bg-card rounded-2xl p-6 border border-slate-800 shadow-xl overflow-x-auto">
+                    <div class="mermaid">
+                        flowchart TD
+                        Request[User Request] --> URLRouting[URL Router]
+                        URLRouting --> View
+                        View -->|Gets data| Model
+                        Model -->|Data| View
+                        View -->|Context| Template
+                        Template --> Response[HTTP Response]
+
+                        style Request fill:#64748b,stroke:#334155,color:#f8fafc;
+                        style Response fill:#64748b,stroke:#334155,color:#f8fafc;
+                    </div>
+                </div>
+            </div>
+        </section><!-- First View -->
+        <section id="first-view" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Creating Your First View</h2>
+                </div>
+
+                <p class="text-slate-400 mb-6 border-l-4 border-emerald-500 pl-4 py-2 bg-emerald-500/5 rounded-r">
+                    A view handles logic. It takes a Web request and returns a Web response.
+                </p>
+
+                <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl mb-6">
+                    <div class="terminal-header">
+                        <span class="text-xs text-slate-400 font-mono"><i class="fab fa-python text-blue-400 mr-2"></i>
+                            tasks/views.py</span>
+                    </div>
+                    <div class="p-4">
+                        <pre><code class="language-python">from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Hello Django Hackathon!")</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- URL Routing -->
+        <section id="url-routing" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">URL Routing</h2>
+                </div>
+
+                <p class="text-slate-400 mb-6 border-l-4 border-emerald-500 pl-4 py-2 bg-emerald-500/5 rounded-r">
+                    Connects URLs (like <code>/home</code>) to Views.
+                </p>
+
+                <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl mb-6">
+                    <div class="terminal-header">
+                        <span class="text-xs text-slate-400 font-mono"><i class="fab fa-python text-blue-400 mr-2"></i>
+                            hackathon_project/urls.py</span>
+                    </div>
+                    <div class="p-4">
+                        <pre><code class="language-python">from django.urls import path
+from tasks.views import home
+
+urlpatterns = [
+    path('', home),
+]</code></pre>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-10">
+                    <div
+                        class="bg-slate-800/80 rounded-full px-6 py-2 flex items-center gap-4 border border-slate-700 shadow-lg text-sm text-slate-300">
+                        <span class="font-mono text-primary font-bold">URL</span>
+                        <i class="fas fa-arrow-right text-slate-500"></i>
+                        <span class="font-mono text-blue-400 font-bold">View</span>
+                        <i class="fas fa-arrow-right text-slate-500"></i>
+                        <span class="font-mono text-emerald-400 font-bold">Response</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Models and DB -->
+        <section id="models" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Models & Database</h2>
+                </div>
+
+                <p class="text-slate-400 mb-6 border-l-4 border-emerald-500 pl-4 py-2 bg-emerald-500/5 rounded-r">
+                    Models let you create database tables using Python instead of SQL.
+                </p>
+
+                <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl mb-6">
+                    <div class="terminal-header">
+                        <span class="text-xs text-slate-400 font-mono"><i class="fab fa-python text-blue-400 mr-2"></i>
+                            tasks/models.py</span>
+                    </div>
+                    <div class="p-4">
+                        <pre><code class="language-python">from django.db import models
+
+class Task(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title</code></pre>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 mt-8">
+                    <div
+                        class="bg-slate-800/50 p-4 border border-slate-700 rounded-lg text-center hover:bg-slate-800 transition-colors cursor-help">
+                        <div class="font-mono text-primary mb-2 font-bold text-sm">CharField()</div>
+                        <div class="text-xs text-slate-400">Short text like Titles, Usernames</div>
+                    </div>
+                    <div
+                        class="bg-slate-800/50 p-4 border border-slate-700 rounded-lg text-center hover:bg-slate-800 transition-colors cursor-help">
+                        <div class="font-mono text-primary mb-2 font-bold text-sm">TextField()</div>
+                        <div class="text-xs text-slate-400">Long text like Descriptions, Posts</div>
+                    </div>
+                    <div
+                        class="bg-slate-800/50 p-4 border border-slate-700 rounded-lg text-center hover:bg-slate-800 transition-colors cursor-help">
+                        <div class="font-mono text-primary mb-2 font-bold text-sm">BooleanField()</div>
+                        <div class="text-xs text-slate-400">True/False value like Completed Status</div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- Migrations -->
+        <section id="migrations" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Database Migrations</h2>
+                </div>
+
+                <p class="text-slate-400 mb-6 border-l-4 border-emerald-500 pl-4 py-2 bg-emerald-500/5 rounded-r">
+                    Migrations translate your Python models into database tables.
+                </p>
+
+                <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl mb-6">
+                    <div class="terminal-header">
+                        <div class="terminal-dot dot-red"></div>
+                        <div class="terminal-dot dot-yellow"></div>
+                        <div class="terminal-dot dot-green"></div>
+                        <span class="text-xs text-slate-400 ml-4 font-mono">Run Migrations</span>
+                    </div>
+                    <div class="p-4">
+                        <pre><code class="language-bash">python manage.py makemigrations
+
+python manage.py migrate</code></pre>
+                        <p class="text-slate-400 text-sm mt-4 p-4 border-l-2 border-primary bg-primary/5 rounded-r">
+                            <strong>Explanation:</strong> <code>makemigrations</code> prepares the SQL code.
+                            <code>migrate</code> actually runs it and creates the tables in SQLite.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Django Admin -->
+        <section id="admin" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Django Admin</h2>
+                </div>
+
+                <p class="text-slate-400 mb-6 border-l-4 border-emerald-500 pl-4 py-2 bg-emerald-500/5 rounded-r">
+                    Django gives you a free, secure backend interface to manage your data instantly. No need to build
+                    custom
+                    dashboards.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-10">
+                    <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl">
+                        <div class="terminal-header">
+                            <span class="text-xs text-slate-400 font-mono"><i
+                                    class="fab fa-python text-blue-400 mr-2"></i>
+                                tasks/admin.py</span>
+                        </div>
+                        <div class="p-4">
+                            <pre><code class="language-python">from django.contrib import admin
+from .models import Task
+
+admin.site.register(Task)</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl">
+                        <div class="terminal-header">
+                            <div class="terminal-dot dot-red"></div>
+                            <div class="terminal-dot dot-yellow"></div>
+                            <div class="terminal-dot dot-green"></div>
+                            <span class="text-xs text-slate-400 ml-4 font-mono">Create Admin User</span>
+                        </div>
+                        <div class="p-4">
+                            <pre><code class="language-bash">python manage.py createsuperuser
+
+# Visit: localhost:8000/admin</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Dashboard Placeholder -->
+                <div
+                    class="relative rounded-xl overflow-hidden border-2 border-slate-800 shadow-2xl mx-auto md:w-4/5 group">
+                    <div
+                        class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none flex items-center justify-center">
+                        <span class="px-4 py-2 bg-primary text-slate-900 font-bold rounded-lg shadow-lg">Django
+                            Administration</span>
+                    </div>
+                    <div class="bg-slate-800 p-2 flex items-center border-b border-slate-700">
+                        <div class="flex gap-2 text-xs mr-4 ml-2">
+                            <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                        </div>
+                        <div class="bg-slate-900 text-slate-400 text-xs px-24 py-1 rounded w-full text-center truncate">
+                            localhost:8000/admin</div>
+                    </div>
+                    <!-- Minimal Admin mock UI -->
+                    <div class="bg-white h-64 md:h-80 w-full flex">
+                        <div class="w-1/4 bg-[#417690] text-white p-4 font-sans text-sm border-r border-slate-300">
+                            <div class="mb-6 font-bold truncate">Django Administration</div>
+                            <div class="text-[#f5dd5d] font-bold mb-2 uppercase text-xs">Auth</div>
+                            <div class="mb-1 text-white/80 hover:text-white cursor-pointer select-none">Groups</div>
+                            <div class="mb-4 text-white/80 hover:text-white cursor-pointer select-none">Users</div>
+                            <div class="text-[#f5dd5d] font-bold mb-2 uppercase text-xs">Tasks</div>
+                            <div
+                                class="mb-1 text-white/80 hover:text-white cursor-pointer select-none bg-black/20 px-2 py-1 -ml-2 rounded">
+                                Tasks</div>
+                        </div>
+                        <div class="w-3/4 bg-[#f9f9f9] p-4 text-sm font-sans relative overflow-hidden text-slate-800">
+                            <div class="border-b border-slate-300 pb-2 mb-4 font-bold text-lg text-[#417690]">Select
+                                task to
+                                change</div>
+                            <div class="bg-white border border-slate-200 shadow-sm rounded">
+                                <div
+                                    class="bg-slate-100 p-2 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase flex">
+                                    <div class="w-2/3">Task</div>
+                                </div>
+                                <div class="p-2 border-b border-slate-100 flex items-center hover:bg-[#fffff0]">
+                                    <div class="w-2/3 text-[#417690] font-bold cursor-pointer">Build Hackathon Backend
+                                    </div>
+                                </div>
+                                <div class="p-2 flex items-center hover:bg-[#fffff0]">
+                                    <div class="w-2/3 text-[#417690] font-bold cursor-pointer">Deploy on Server</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- API Example -->
+        <section id="api-example" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Simple API Example</h2>
+                </div>
+
+                <p class="text-slate-400 mb-6 border-l-4 border-emerald-500 pl-4 py-2 bg-emerald-500/5 rounded-r">
+                    For hackathons, your backend doesn't output HTML. It usually outputs raw data for React or mobile
+                    apps to
+                    consume.
+                </p>
+
+                <div class="bg-card rounded-xl overflow-hidden border border-slate-800 shadow-xl mb-6">
+                    <div class="terminal-header">
+                        <span class="text-xs text-slate-400 font-mono"><i class="fab fa-python text-blue-400 mr-2"></i>
+                            tasks/views.py</span>
+                    </div>
+                    <div class="p-4">
+                        <pre><code class="language-python">from django.http import JsonResponse
+from .models import Task
+
+def tasks_api(request):
+    data = list(Task.objects.values())
+    return JsonResponse(data, safe=False)</code></pre>
+                    </div>
+                </div>
+
+                <!-- API Response mock -->
+                <div
+                    class="bg-card rounded-xl overflow-hidden border border-slate-800 mx-auto w-full group mt-6 shadow-2xl">
+                    <div class="bg-slate-800 p-2 flex items-center border-b border-slate-700">
+                        <div class="flex gap-2 text-xs mr-4 ml-2">
+                            <i class="fas fa-lock text-green-400"></i>
+                        </div>
+                        <div class="text-slate-400 text-xs py-1 rounded w-full font-mono">localhost:8000/api/tasks</div>
+                    </div>
+                    <div class="p-4 bg-slate-900 border border-slate-700/50 shadow-inner overflow-x-auto text-sm">
+                        <pre><code class="language-json">[
+    {
+        "id": 1,
+        "title": "Setup Django Project",
+        "description": "Install django and run startproject",
+        "completed": true
+    },
+    {
+        "id": 2,
+        "title": "Build the API",
+        "description": "Create JsonResponse endpoints for tasks",
+        "completed": false
+    }
+]</code></pre>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Hackathon Tips Section -->
+        <section id="tips" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-5xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-yellow-400 rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Django Hackathon Tips</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8 font-medium italic text-lg text-center">How to win with Django in 24
+                    hours.</p>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 hover:-translate-y-2 transition-transform shadow-xl hover:shadow-yellow-500/10 group cursor-default">
+                        <div
+                            class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Tip 1: Use Admin Panel</h3>
+                        <p class="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                            Use Django Admin instead of building custom dashboards. You don't have time to write
+                            <code>&lt;table&gt;</code> loops for an internally used dashboard.
+                        </p>
+                    </div>
+
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 hover:-translate-y-2 transition-transform shadow-xl hover:shadow-yellow-500/10 group cursor-default">
+                        <div
+                            class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Tip 2: Stick to SQLite</h3>
+                        <p class="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                            Start with SQLite database. Don't waste early hours configuring Postgres clusters unless
+                            absolutely
+                            necessary for your idea.
+                        </p>
+                    </div>
+
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 hover:-translate-y-2 transition-transform shadow-xl hover:shadow-yellow-500/10 group cursor-default">
+                        <div
+                            class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-plug"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Tip 3: Use DRF</h3>
+                        <p class="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                            Use Django Rest Framework (DRF) if your API gets slightly complex. It saves hours writing
+                            serializer
+                            logic and auth tokens.
+                        </p>
+                    </div>
+
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 hover:-translate-y-2 transition-transform shadow-xl hover:shadow-yellow-500/10 group cursor-default lg:col-span-2">
+                        <div
+                            class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-xl text-blue-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Tip 4: Divide Team Roles Early</h3>
+                        <p class="text-sm text-slate-400 mb-4">
+                            Don't have everyone touch `views.py`. Split work clearly:
+                        </p>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono">
+                            <span class="px-2 py-1 bg-slate-800 text-purple-300 rounded border border-slate-700">1
+                                Backend:
+                                Django + Admin</span>
+                            <span class="px-2 py-1 bg-slate-800 text-emerald-300 rounded border border-slate-700">1
+                                Frontend:
+                                React/Flutter</span>
+                            <span class="px-2 py-1 bg-slate-800 text-blue-300 rounded border border-slate-700">1 ML:
+                                Scripting
+                                models</span>
+                            <span class="px-2 py-1 bg-slate-800 text-yellow-300 rounded border border-slate-700">1
+                                Integrator:
+                                Ties it all up</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-card rounded-2xl p-6 border border-slate-800 hover:-translate-y-2 transition-transform shadow-xl hover:shadow-yellow-500/10 group cursor-default">
+                        <div
+                            class="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center text-xl text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Tip 5: Prototype > Perfection</h3>
+                        <p class="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                            Judges care that the core feature works. Hardcode edge cases if you have to. Focus on your
+                            USP.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section><!-- Mini Project Section -->
+        <section id="mini-project" class="py-20 px-6 bg-dark border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-primary rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Mini Project: Task Manager</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8 border-l-4 border-emerald-500 pl-4 py-2 bg-emerald-500/5 rounded-r">
+                    Here's a simple example of a complete Hackathon backend project architecture.
+                </p>
+
+                <div class="bg-card rounded-2xl p-8 border border-slate-800 shadow-xl relative overflow-hidden group">
+                    <div
+                        class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-[100px] border-l border-b border-primary/10">
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-white mb-6">Task API Backend</h3>
+
+                    <div class="grid md:grid-cols-2 gap-8 relative z-10">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Features</h4>
+                            <ul class="space-y-3">
+                                <li class="flex gap-3 text-slate-300">
+                                    <i class="fas fa-check-circle text-primary mt-1"></i> <span>Create tasks (POST
+                                        /api/tasks)</span>
+                                </li>
+                                <li class="flex gap-3 text-slate-300">
+                                    <i class="fas fa-check-circle text-primary mt-1"></i> <span>View tasks (GET
+                                        /api/tasks)</span>
+                                </li>
+                                <li class="flex gap-3 text-slate-300">
+                                    <i class="fas fa-check-circle text-primary mt-1"></i> <span>Mark completed
+                                        (PATCH)</span>
+                                </li>
+                                <li class="flex gap-3 text-slate-300">
+                                    <i class="fas fa-check-circle text-primary mt-1"></i> <span>Admin management
+                                        dashboard</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Architecture Flow
+                            </h4>
+                            <div
+                                class="bg-slate-900 border border-slate-700/50 p-4 rounded-xl font-mono text-sm leading-8 text-center text-slate-300 shadow-inner">
+                                <div class="text-blue-400 font-bold bg-blue-500/10 rounded py-1 inline-block px-4">
+                                    React/Flutter
+                                </div>
+                                <div class="text-slate-500"><i class="fas fa-long-arrow-alt-down text-lg py-1"></i> JSON
+                                    Request
+                                </div>
+                                <div
+                                    class="text-primary font-bold bg-primary/10 rounded py-1 border border-primary/20 inline-block px-4">
+                                    <i class="fab fa-python mr-1"></i> Django API
+                                </div>
+                                <div class="text-slate-500"><i class="fas fa-long-arrow-alt-down text-lg py-1"></i> SQL
+                                </div>
+                                <div
+                                    class="text-slate-200 font-bold bg-slate-800 rounded py-1 border border-slate-600 inline-block px-4">
+                                    <i class="fas fa-database text-xs text-emerald-400 mr-1"></i> SQLite Database
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="py-20 px-6 bg-slate-900 border-t border-slate-800">
+            <div class="max-w-4xl mx-auto" data-aos="fade-up">
+                <div class="flex items-center gap-4 mb-10">
+                    <div class="w-12 h-1 bg-blue-500 rounded"></div>
+                    <h2 class="text-3xl font-bold text-white">Learning Resources</h2>
+                </div>
+
+                <p class="text-slate-400 mb-8 font-medium">Keep learning after the session!</p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <a href="https://docs.djangoproject.com/" target="_blank"
+                        class="bg-card rounded-xl border border-slate-800 p-4 hover:border-blue-500/50 hover:bg-slate-800 transition-all flex items-center gap-4 group">
+                        <div
+                            class="w-10 h-10 rounded bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 group-hover:text-white transition-colors">Django
+                                Official Docs
+                            </div>
+                            <div class="text-xs text-slate-500">The most comprehensive guide</div>
+                        </div>
+                        <i
+                            class="fas fa-external-link-alt ml-auto text-slate-600 group-hover:text-blue-400 transition-colors"></i>
+                    </a>
+
+                    <a href="https://www.django-rest-framework.org/" target="_blank"
+                        class="bg-card rounded-xl border border-slate-800 p-4 hover:border-red-500/50 hover:bg-slate-800 transition-all flex items-center gap-4 group">
+                        <div
+                            class="w-10 h-10 rounded bg-red-500/10 flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 group-hover:text-white transition-colors">Django Rest
+                                Framework
+                            </div>
+                            <div class="text-xs text-slate-500">API toolkit docs</div>
+                        </div>
+                        <i
+                            class="fas fa-external-link-alt ml-auto text-slate-600 group-hover:text-red-400 transition-colors"></i>
+                    </a>
+
+                    <a href="https://docs.python.org/3/" target="_blank"
+                        class="bg-card rounded-xl border border-slate-800 p-4 hover:border-yellow-500/50 hover:bg-slate-800 transition-all flex items-center gap-4 group">
+                        <div
+                            class="w-10 h-10 rounded bg-yellow-500/10 flex items-center justify-center text-yellow-500 group-hover:scale-110 transition-transform">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 group-hover:text-white transition-colors">Python Docs
+                            </div>
+                            <div class="text-xs text-slate-500">Core language reference</div>
+                        </div>
+                        <i
+                            class="fas fa-external-link-alt ml-auto text-slate-600 group-hover:text-yellow-400 transition-colors"></i>
+                    </a>
+
+                    <a href="#"
+                        class="bg-card rounded-xl border border-slate-800 p-4 hover:border-emerald-500/50 hover:bg-slate-800 transition-all flex items-center gap-4 group">
+                        <div
+                            class="w-10 h-10 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-200 group-hover:text-white transition-colors">Free Django
+                                Templates
+                            </div>
+                            <div class="text-xs text-slate-500">Starter packs for hackathons</div>
+                        </div>
+                        <i
+                            class="fas fa-download ml-auto text-slate-600 group-hover:text-emerald-400 transition-colors"></i>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="mt-24 pt-8 border-t border-slate-800 text-center pb-8">
+                <p class="text-slate-500 text-sm">Crafted for future Hackathon Winners <i
+                        class="fas fa-heart text-red-500 mx-1"></i> Keerthana MG</p>
+                <div class="flex items-center justify-center gap-2 mt-4 text-xs text-slate-600 font-mono">
+                    <i class="fab fa-python"></i> Powered by Django & TailwindCSS
+                </div>
+            </footer>
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <!-- Prism Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Custom script -->
+    <script src="script.js"></script>
+</body>
+
+</html>
