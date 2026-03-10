@@ -47,6 +47,18 @@
     <!-- Custom Styles -->
     <link rel="stylesheet" href="./styles.css">
 
+    <!-- FOUC Prevention for Tailwind CDN -->
+    <style>
+        body {
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+    </style>
+
     <!-- Mermaid -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 </head>
@@ -1731,7 +1743,7 @@ def tasks_api(request):
                 <p class="text-slate-500 text-sm">Crafted for future Hackathon Winners <i
                         class="fas fa-heart text-red-500 mx-1"></i> Keerthana MG</p>
                 <div class="flex items-center justify-center gap-2 mt-4 text-xs text-slate-600 font-mono">
-                    <i class="fab fa-python"></i> Powered by Django & TailwindCSS
+                    <i class="fab fa-python"></i> Rajalakshmi Engineering College
                 </div>
             </footer>
         </section>

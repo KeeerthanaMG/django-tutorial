@@ -1,8 +1,19 @@
-// Initialize AOS
-AOS.init({
-    duration: 800,
-    once: true,
-    offset: 100,
+// Handle FOUC and initialize AOS correctly without race conditions
+window.addEventListener('load', () => {
+    // Reveal body smoothly once external resources load
+    document.body.classList.add('loaded');
+
+    // Defer AOS init slightly to ensure Tailwind CDN fully painted the DOM
+    setTimeout(() => {
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100,
+        });
+
+        // Safe recalculation of offsets
+        setTimeout(() => AOS.refresh(), 300);
+    }, 100);
 });
 
 // Initialize Mermaid
